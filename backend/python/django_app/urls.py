@@ -11,7 +11,7 @@ def hello_name(request):
     This function recieves a request object and returns 'Hello, {name}!' in JSON format.
     It extracts the name from query parameter called 'name' in request object.
     """
-    name = request.GET.get('name')
+    name = request.GET.get('name', 'User')
     return JsonResponse({
         'message': f'Hello, {name}!'
     })
