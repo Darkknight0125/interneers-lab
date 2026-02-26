@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import HttpResponse, JsonResponse
 
 def hello_world(request):
@@ -22,4 +22,7 @@ urlpatterns = [
     path('hello/', hello_name),
     # Example usage: /hello/?name=Bob
     # returns {"message": "Hello, Bob!"}
+
+    #Product APIs
+    path('product/', include("product.adapters.http.urls")),
 ]
