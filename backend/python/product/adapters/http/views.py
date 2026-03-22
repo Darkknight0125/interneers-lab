@@ -3,20 +3,17 @@ import json
 from django.http import JsonResponse, HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
 
-from product.infrastructure.repositories.in_memory.product_repository import (
-    InfrastructureRepository,
+from product.infrastructure.repositories.mongo.product_repository import (
+    MongoProductRepository,
 )
 
 from product.adapters.http.validators import validate_create_payload
+from product.application.services.product_service import ProductService
 
-from product.application.use_cases.create_product import create_product
-from product.application.use_cases.get_product import get_product
-from product.application.use_cases.list_products import list_products
-from product.application.use_cases.update_product import update_product
-from product.application.use_cases.delete_product import delete_product
 
-# in-memory repo instance
-repo = InfrastructureRepository()
+# MongoDB repo instance
+repo = MongoProductRepository()
+service = ProductService(repo)
 
 
 @csrf_exempt
@@ -31,7 +28,7 @@ def create_product_view(request):
 
     try:
         validate_create_payload(payload)
-        product = create_product(repo, payload)
+        product = service.create_product(payload)
         return JsonResponse({'product': product.to_dict()}, status=201)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -42,7 +39,10 @@ def get_product_view(request, p_id):
     if request.method != "GET":
         return HttpResponseNotAllowed(["GET"])
 
-    product = get_product(repo, p_id)
+    try:
+        product = service.get_product(p_id)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
     if product is None:
         return JsonResponse({"error": "Not found"}, status=404)
@@ -55,17 +55,16 @@ def list_products_view(request):
     if request.method != "GET":
         return HttpResponseNotAllowed(["GET"])
 
-    page_no = request.GET.get("page_no")
-    page_size = request.GET.get("page_size")
+    offset = request.GET.get("offset")
+    length = request.GET.get("length")
 
     try:
-        if page_no is not None:
-            page_no = int(page_no)
-            page_size = int(page_size) if page_size else 10
-            products = list_products(repo, page_no, page_size)
+        if offset is not None:
+            offset = int(offset)
+            length = int(length) if length else None
+            products = service.list_products(offset, length)
         else:
-            products = list_products(repo)
-
+            products = service.list_products()
         data = [product.to_dict() for product in products]
 
         return JsonResponse(data, safe=False, status=200)
@@ -85,7 +84,7 @@ def update_product_view(request, p_id):
         return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     try:
-        product = update_product(repo, p_id, payload)
+        product = service.update_product(p_id, payload)
         return JsonResponse({'product': product.to_dict()}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -97,7 +96,7 @@ def delete_product_view(request, p_id):
         return HttpResponseNotAllowed(["DELETE"])
 
     try:
-        delete_product(repo, p_id)
+        service.delete_product(p_id)
         return JsonResponse({"message": "Deleted successfully"}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)

@@ -76,16 +76,18 @@ WSGI_APPLICATION = "django_app.wsgi.application"
 
 from dotenv import load_dotenv
 import os
-from pymongo import MongoClient
+import mongoengine
 
 load_dotenv()
 MONGO_USER = os.getenv("MONGO_USER", "root")
 MONGO_PASS = os.getenv("MONGO_PASS", "example")
 MONGO_PORT = os.getenv("MONGO_PORT", "27019")
 MONGO_HOST = os.getenv("MONGO_HOST", "localhost")
+MONGO_DB = os.getenv("MONGO_DB", "product_db")
 
-client = MongoClient(
-    f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
+mongoengine.connect(
+    db=MONGO_DB,
+    host=f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
 )
 
 DATABASES = {}
