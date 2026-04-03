@@ -12,11 +12,23 @@ class ProductRepository:
     def list_all(self):
         raise NotImplementedError
 
-    def list_paginated(self, page_no, page_size=10):
+    def list_paginated(self, offset, length=10):
         raise NotImplementedError
 
     def edit(self, product_id, product):
         raise NotImplementedError
 
     def delete(self, product_id):
+        raise NotImplementedError
+    
+    def assign_category(self, product_id, category_id):
+        raise NotImplementedError
+    
+    def remove_category(self, product_id):
+        raise NotImplementedError
+    
+    def get_by_category(self, category_id):
+        raise NotImplementedError
+
+    def filter_products(self, filters):
         raise NotImplementedError

@@ -3,7 +3,6 @@ REQUIRED_CREATE_FIELDS = {
     "brand",
     "price",
     "description",
-    "category",
     "inventory_quantity",
 }
 
