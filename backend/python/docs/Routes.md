@@ -110,10 +110,11 @@ GET /list/
 ## Optional Query Params
 
 ```
-?page_no=1&page_size=10
+?offset=1&length=10
 ```
 
-If `page_no` is not provided, all products are returned.
+If `offset` is not provided, all products are returned.
+If `offset` is provided but `length` is not provided, all products after offset are returned.
 
 ---
 
