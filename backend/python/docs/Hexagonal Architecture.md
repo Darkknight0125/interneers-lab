@@ -78,8 +78,10 @@ It does not know anything about:
     domain/
     ├── entities/
     │   └── product.py
+    |   └── product_category.py
     └── ports/
         └── product_repository.py
+        └── product_category_repository.py
 
 ### Entities
 
@@ -159,14 +161,11 @@ They **do not handle**:
 ## Structure
 
     application/
-    └── use_cases/
-        ├── create_product.py
-        ├── get_product.py
-        ├── list_products.py
-        ├── update_product.py
-        └── delete_product.py
+    └── services/
+        ├── product_service.py
+        └── product_category_service.py
 
-Each file contains a single use case function.
+Each file contains all the usecases of the corresponding service.
 
 ------------------------------------------------------------------------
 
@@ -188,9 +187,19 @@ It contains code that interacts with external systems such as:
 ## Structure
 
     infrastructure/
-    └── repositories/
-        └── in_memory/
-            └── product_repository.py
+    |── repositories/
+    |   └── in_memory/
+    |   |   └── product_repository.py
+    |   └── mongo/
+    |       |── product_repository.py
+    |       └── product_category_repository.py
+    |── models/
+    |   └── mongo/
+    |       |── product_model.py
+    |       └── product_category_model.py
+    └── db/
+        └── mongo.py
+
 
 ------------------------------------------------------------------------
 
@@ -227,8 +236,12 @@ In this project, adapters handle **HTTP requests using Django**.
 
     adapters/
     └── http/
-        ├── views.py
-        ├── urls.py
+        |── urls/
+        |   |── product_urls.py
+        |   └── product_category_urls.py
+        |── views/
+        |   |── product_views.py
+        |   └── product_category_views.py
         └── validators.py
 
 ------------------------------------------------------------------------
@@ -282,12 +295,6 @@ Repository Port\
 Infrastructure Repository\
 ↓\
 Response returned to client
-
-------------------------------------------------------------------------
-
-product)`.
-7.  Infrastructure repository stores product in memory.
-8.  Response is returned to the client.
 
 ------------------------------------------------------------------------
 
