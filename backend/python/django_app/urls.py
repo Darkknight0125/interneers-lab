@@ -24,5 +24,8 @@ urlpatterns = [
     # returns {"message": "Hello, Bob!"}
 
     #Product APIs
-    path('product/', include("product.adapters.http.urls")),
+    path('product/', include("product.adapters.http.urls.product_urls")),
+
+    #ProductCategory APIs
+    path('category/', include("product.adapters.http.urls.product_category_urls"))
 ]

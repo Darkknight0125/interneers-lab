@@ -1,5 +1,6 @@
 import mongoengine as me
 from datetime import datetime
+from product.infrastructure.models.mongo.product_category_model import ProductCategoryModel
 
 
 class ProductModel(me.Document):
@@ -8,7 +9,7 @@ class ProductModel(me.Document):
     brand = me.StringField(required=True, max_length=200)
     price = me.IntField(required=True)
     description = me.StringField(required=True)
-    category = me.StringField(required=True)
+    category = me.ReferenceField(ProductCategoryModel, required=False, null=True)
     inventory_quantity = me.IntField(required=True)
 
     created_at = me.DateTimeField(default=datetime.now())
@@ -25,7 +26,12 @@ class ProductModel(me.Document):
             "brand": self.brand,
             "price": self.price,
             "description": self.description,
-            "category": self.category,
+            "category": (
+                {
+                    "id": str(self.category.id),
+                    "title": self.category.title
+                } if self.category else None
+            ),
             "inventory_quantity": self.inventory_quantity,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
