@@ -25,6 +25,12 @@ class MongoProductCategoryRepository(ProductCategoryRepository):
 
         doc.save()
         return doc
+    
+    def find_by_title(self, title):
+        """
+        Returns a category document if a category with given title exists, else None.
+        """
+        return ProductCategoryModel.objects(title=title).first()
 
     def get(self, category_id):
 

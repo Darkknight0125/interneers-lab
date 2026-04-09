@@ -8,14 +8,22 @@ from django.views.decorators.csrf import csrf_exempt
 from product.infrastructure.repositories.mongo.product_repository import (
     MongoProductRepository,
 )
+from product.infrastructure.repositories.mongo.product_category_repository import (
+    MongoProductCategoryRepository,
+)
 
 from product.adapters.http.validators import validate_create_payload
 from product.application.services.product_service import ProductService
+from product.application.services.product_category_service import ProductCategoryService
 
 
-# MongoDB repo instance
-repo = MongoProductRepository()
-service = ProductService(repo)
+# repos
+product_repo = MongoProductRepository()
+category_repo = MongoProductCategoryRepository()
+
+# services
+product_service = ProductService(product_repo)
+category_service = ProductCategoryService(category_repo, product_service)
 
 
 @csrf_exempt
@@ -30,7 +38,7 @@ def create_product_view(request):
 
     try:
         validate_create_payload(payload)
-        product = service.create_product(payload)
+        product = product_service.create_product(payload)
         return JsonResponse({'product': product.to_dict()}, status=201)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -42,7 +50,7 @@ def get_product_view(request, p_id):
         return HttpResponseNotAllowed(["GET"])
 
     try:
-        product = service.get_product(p_id)
+        product = product_service.get_product(p_id)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
@@ -64,9 +72,9 @@ def list_products_view(request):
         if offset is not None:
             offset = int(offset)
             length = int(length) if length else None
-            products = service.list_products(offset, length)
+            products = product_service.list_products(offset, length)
         else:
-            products = service.list_products()
+            products = product_service.list_products()
         data = [product.to_dict() for product in products]
 
         return JsonResponse(data, safe=False, status=200)
@@ -86,7 +94,7 @@ def update_product_view(request, p_id):
         return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     try:
-        product = service.update_product(p_id, payload)
+        product = product_service.update_product(p_id, payload)
         return JsonResponse({'product': product.to_dict()}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -98,7 +106,7 @@ def delete_product_view(request, p_id):
         return HttpResponseNotAllowed(["DELETE"])
 
     try:
-        service.delete_product(p_id)
+        product_service.delete_product(p_id)
         return JsonResponse({"message": "Deleted successfully"}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -117,7 +125,7 @@ def assign_category_view(request, p_id):
         if not category_id:
             return JsonResponse({"error": "category_id required"}, status=400)
 
-        product = service.assign_product_to_category(p_id, category_id)
+        product = product_service.assign_product_to_category(p_id, category_id)
         return JsonResponse({"product": product.to_dict()}, status=200)
 
     except Exception as e:
@@ -131,7 +139,7 @@ def remove_category_view(request, p_id):
         return HttpResponseNotAllowed(["DELETE"])
 
     try:
-        product = service.remove_product_from_category(p_id)
+        product = product_service.remove_category_from_product(p_id)
         return JsonResponse({"product": product.to_dict()}, status=200)
 
     except Exception as e:
@@ -144,7 +152,7 @@ def products_by_category_view(request, c_id):
         return HttpResponseNotAllowed(["GET"])
 
     try:
-        products = service.get_products_by_category(c_id)
+        products = product_service.get_products_by_category(c_id)
         data = [p.to_dict() for p in products]
         return JsonResponse(data, safe=False, status=200)
 
@@ -182,7 +190,7 @@ def filter_products_view(request):
             filters["sort_by"] = request.GET.get("sort_by")
             filters["order"] = request.GET.get("order", "asc")
 
-        products = service.filter_products(filters)
+        products = product_service.filter_products(filters)
         data = [p.to_dict() for p in products]
         return JsonResponse(data, safe=False, status=200)
 
@@ -192,7 +200,10 @@ def filter_products_view(request):
 
 @csrf_exempt
 def bulk_upload_products_view(request):
-
+    """
+    The csv should contain headings labelled:
+    name, brand, price, description, inventory_quantity, category_id(leave empty if none)
+    """
     if request.method != "POST":
         return HttpResponseNotAllowed(["POST"])
 
@@ -221,7 +232,7 @@ def bulk_upload_products_view(request):
                     "category_id": row.get("category_id") or None
                 }
 
-                service.create_product(payload)
+                product_service.create_product(payload)
                 success_count += 1
 
             except Exception as e:

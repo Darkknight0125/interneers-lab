@@ -3,14 +3,7 @@ import json
 from django.http import JsonResponse, HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
 
-from product.infrastructure.repositories.mongo.product_category_repository import (
-    MongoProductCategoryRepository,
-)
-from product.application.services.product_category_service import ProductCategoryService
-
-
-repo = MongoProductCategoryRepository()
-service = ProductCategoryService(repo)
+from product.adapters.http.views.product_views import category_service
 
 
 @csrf_exempt
@@ -24,7 +17,7 @@ def create_category_view(request):
         return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     try:
-        category = service.create_category(payload)
+        category = category_service.create_category(payload)
         return JsonResponse({"category": category.to_dict()}, status=201)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -35,7 +28,7 @@ def get_category_view(request, c_id):
         return HttpResponseNotAllowed(["GET"])
 
     try:
-        category = service.get_category(c_id)
+        category = category_service.get_category(c_id)
 
         if category is None:
             return JsonResponse({"error": "Category not found"}, status=404)
@@ -51,7 +44,7 @@ def list_categories_view(request):
         return HttpResponseNotAllowed(["GET"])
 
     try:
-        categories = service.list_categories()
+        categories = category_service.list_categories()
         data = [c.to_dict() for c in categories]
         return JsonResponse(data, safe=False, status=200)
 
@@ -70,7 +63,7 @@ def update_category_view(request, c_id):
         return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     try:
-        category = service.update_category(c_id, payload)
+        category = category_service.update_category(c_id, payload)
         return JsonResponse({"category": category.to_dict()}, status=200)
 
     except Exception as e:
@@ -83,7 +76,7 @@ def delete_category_view(request, c_id):
         return HttpResponseNotAllowed(["DELETE"])
 
     try:
-        service.delete_category(c_id)
+        category_service.delete_category(c_id)
         return JsonResponse({"message": "Category deleted"}, status=200)
 
     except Exception as e:
