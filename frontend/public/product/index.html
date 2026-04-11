@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Catalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-bracket">[</span>
+          CATALOG
+          <span class="logo-bracket">]</span>
+        </div>
+        <div class="header-meta">
+          <span class="meta-label">PRODUCTS</span>
+          <span class="product-count" id="product-count">—</span>
+        </div>
+      </div>
+    </header>
+
+    <!--FILTERS BAR -->
+    <section class="filters-bar">
+      <div class="filters-inner">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="Search products..."
+          />
+        </div>
+        <div class="filter-chips">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="in_stock">In Stock</button>
+          <button class="chip" data-filter="out_of_stock">Out of Stock</button>
+        </div>
+        <div class="sort-wrap">
+          <select id="sort-select" class="sort-select">
+            <option value="">Sort by</option>
+            <option value="price_asc">Price ↑</option>
+            <option value="price_desc">Price ↓</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <!-- Skeleton loader shown while fetching -->
+      <div class="product-grid" id="skeleton-grid">
+        <div class="product-card skeleton"></div>
+        <div class="product-card skeleton"></div>
+        <div class="product-card skeleton"></div>
+        <div class="product-card skeleton"></div>
+        <div class="product-card skeleton"></div>
+        <div class="product-card skeleton"></div>
+      </div>
+
+      <!-- Real product grid, hidden until data loads -->
+      <div class="product-grid hidden" id="product-grid"></div>
+
+      <!-- Error state -->
+      <div class="error-state hidden" id="error-state">
+        <div class="error-code">503</div>
+        <p class="error-msg">Could not reach the backend.<br />Make sure your Django server is running.</p>
+        <button class="retry-btn" id="retry-btn">↻ Retry</button>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state hidden" id="empty-state">
+        <div class="empty-icon">◻</div>
+        <p>No products found.</p>
+      </div>
+    </main>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div class="modal-overlay hidden" id="modal-overlay">
+      <div class="modal" id="modal">
+        <button class="modal-close" id="modal-close">✕</button>
+        <div class="modal-body" id="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast hidden" id="toast"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
