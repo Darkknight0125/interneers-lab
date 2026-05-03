@@ -1,0 +1,51 @@
+.banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 77, 77, 0.08);
+  border: 1px solid rgba(255, 77, 77, 0.28);
+  border-left: 3px solid var(--danger);
+  border-radius: 5px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  animation: slideDown 0.2s ease;
+}
+
+.inline {
+  margin-bottom: 0;
+}
+
+.left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.message {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(255, 77, 77, 0.9);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.dismiss {
+  background: transparent;
+  border: none;
+  color: rgba(255, 77, 77, 0.5);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+
+  &:hover { color: var(--danger); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
