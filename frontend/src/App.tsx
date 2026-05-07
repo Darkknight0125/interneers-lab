@@ -1,26 +1,23 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
+import ProductsPage from "./pages/ProductsPage/ProductsPage";
+import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      {/* Navbar persists across all routes */}
+      <Navbar />
+
+      <Routes>
+        {/* Default route → redirect to /products */}
+        <Route path="/" element={<Navigate to="/products" replace />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/categories" element={<CategoriesPage />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
