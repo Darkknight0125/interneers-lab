@@ -1,10 +1,9 @@
 .page {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 36px 32px 64px;
+  padding: 36px 32px 80px;
 }
 
-// Page header
 .pageHeader {
   display: flex;
   justify-content: space-between;
@@ -29,135 +28,7 @@
   letter-spacing: 0.04em;
 }
 
-.refreshBtn {
-  background: transparent;
-  border: 1px solid var(--border-accent);
-  border-radius: 4px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  padding: 8px 18px;
-  transition: all 0.18s ease;
-  flex-shrink: 0;
-
-  &:hover:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
-
-// Skeleton
-.skeletonGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 14px;
-}
-
-.skeletonCard {
-  height: 140px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.04),
-      transparent
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite linear;
-  }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
-
-// Error box
-.errorBox {
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 77, 77, 0.25);
-  border-left: 3px solid var(--danger);
-  border-radius: 6px;
-  padding: 28px 24px;
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-}
-
-.errorCode {
-  font-family: var(--font-display);
-  font-size: 52px;
-  font-weight: 800;
-  color: rgba(255, 77, 77, 0.2);
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.errorTitle {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--danger);
-  margin-bottom: 6px;
-}
-
-.errorMsg {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-  font-family: var(--font-mono);
-}
-
-.errorHint {
-  font-size: 11px;
-  color: var(--text-muted);
-
-  code {
-    background: rgba(255, 255, 255, 0.06);
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-family: var(--font-mono);
-  }
-}
-
-.retryBtn {
-  margin-left: auto;
-  background: transparent;
-  border: 1px solid rgba(255, 77, 77, 0.4);
-  border-radius: 4px;
-  color: var(--danger);
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 8px 16px;
-  transition: all 0.18s ease;
-  flex-shrink: 0;
-  align-self: center;
-
-  &:hover {
-    background: rgba(255, 77, 77, 0.08);
-  }
-}
-
 @media (max-width: 640px) {
-  .page { padding: 24px 16px 48px; }
+  .page { padding: 24px 16px 60px; }
   .pageTitle { font-size: 24px; }
-  .errorBox { flex-direction: column; gap: 12px; }
-  .errorCode { font-size: 36px; }
 }
