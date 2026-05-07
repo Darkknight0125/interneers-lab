@@ -91,7 +91,7 @@ class ProductService:
         """
         return self.repo.assign_category(product_id, category_id)
 
-    def remove_product_from_category(self, product_id):
+    def remove_category_from_product(self, product_id):
         """
         This function expects a product_id and removes the assigned category.
         If product already has no category, then it throws a ValueError.

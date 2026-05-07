@@ -169,7 +169,7 @@ class MongoProductRepository(ProductRepository):
             query = query.filter(price__lte=filters["max_price"])
 
         if "brand" in filters:
-            query = query.filter(brand=filters["brand"])
+            query = query.filter(brand__iexact=filters["brand"])
 
         if "category_ids" in filters:
             category_ids = [

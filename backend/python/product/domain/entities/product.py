@@ -4,10 +4,10 @@ class Product:
     '''
     def __init__(self, name, brand, price, description, inventory_quantity, category_id=None, p_id=None):
 
-        if not isinstance(name, str) or len(name) > 200:
+        if not isinstance(name, str) or len(name) > 200 or len(name.strip()) == 0:
             raise ValueError('Invalid name attribute')
         
-        if not isinstance(brand, str) or len(brand) > 200:
+        if not isinstance(brand, str) or len(brand) > 200 or len(brand.strip()) == 0:
             raise ValueError('Invalid brand attribute')
         
         if not isinstance(price, int) or price < 0:
