@@ -66,3 +66,27 @@ export interface ApiError {
 // UI helper types
 export type SortOption = "price_asc" | "price_desc" | "name" | "";
 export type StockFilter = "all" | "in_stock" | "out_of_stock";
+
+// Create product payload
+
+export interface CreateProductPayload {
+  name: string;
+  brand: string;
+  price: number;
+  description: string;
+  inventory_quantity: number;
+  category_id?: string;
+}
+
+// Bulk upload response
+
+export interface BulkUploadError {
+  row: number;
+  error: string;
+}
+
+export interface BulkUploadResponse {
+  success_count: number;
+  error_count: number;
+  errors: BulkUploadError[];
+}
