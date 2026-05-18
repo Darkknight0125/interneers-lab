@@ -8,6 +8,8 @@ import {
   AssignCategoryPayload,
   CreateCategoryPayload,
   UpdateCategoryPayload,
+  CreateProductPayload,
+  BulkUploadResponse,
 } from "../types/product";
 
 const API_BASE = process.env.REACT_APP_API_BASE ?? "http://127.0.0.1:8000";
@@ -161,4 +163,38 @@ export async function filterProducts(
   query.append("offset", String(params.offset ?? 0));
   query.append("length", String(params.length ?? 100));
   return apiFetch<ListProductsResponse>(`/product/filter/?${query.toString()}`);
+}
+
+/** POST /product/create/ */
+export async function createProduct(
+  payload: CreateProductPayload,
+): Promise<SingleProductResponse> {
+  return apiFetch<SingleProductResponse>("/product/create/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+/** POST /product/bulk-upload/ — multipart/form-data, key = "file" */
+export async function bulkUploadProducts(
+  file: File,
+): Promise<BulkUploadResponse> {
+  const url = `${API_BASE}/product/bulk-upload/`;
+  console.log(`[API] POST ${url} (CSV: ${file.name})`);
+  const formData = new FormData();
+  formData.append("file", file);
+  // No Content-Type header — browser sets it with boundary automatically
+  const res = await fetch(url, { method: "POST", body: formData });
+  if (!res.ok) {
+    const text = await res.text();
+    let message = text;
+    try {
+      const json = JSON.parse(text);
+      message = json.error ?? json.message ?? json.detail ?? text;
+    } catch {
+      /* plain text */
+    }
+    throw { status: res.status, message };
+  }
+  return res.json() as Promise<BulkUploadResponse>;
 }
